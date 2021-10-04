@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 paramiko = "*"
+proxmoxer = "*"
+openssh-wrapper = "*"
+requests = "*"
 
 [dev-packages]
 pytest = "*"

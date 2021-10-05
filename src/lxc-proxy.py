@@ -1,22 +1,25 @@
 import os
-import logging
-import sys
-from multiprocessing import Pool
-from functools import partial
 import argparse
 from proxmox import get_containers
-from utils import get_logger
+from log import setup_logger
+import pyfiglet
+
+VERSION = os.environ.get('VERSION_NUMBER', '1.0-SNAPSHOT')
+
+figlet = pyfiglet.figlet_format('LXC Proxy', font='slant')
+banner = f'{figlet}Version: {VERSION}\n'
 
 PROCESS_COUNT = int(os.environ.get('PROCESS_COUNT', '5'))
 _HERE = os.path.dirname(__file__)
-custom_logger = get_logger()
+logger = setup_logger(__name__)
+print(banner)
 
 
 def get_vms(argument):
-    custom_logger.info(f'Getting virtual machines from node {argument.host}')
+    logger.info(f'Getting virtual machines from node {argument.host}')
     vms = get_containers.get_containers(argument.host, argument.user)
     for vm in vms:
-        custom_logger.info(f"{vm['vmid']}, {vm['name']}, {vm['status']}")
+        logger.info(f"{vm['vmid']}, {vm['name']}, {vm['status']}")
 
 
 if __name__ == "__main__":
@@ -40,7 +43,7 @@ if __name__ == "__main__":
 
     if args.get:
         if not(args.host and args.user):
-            custom_logger.warning('Host not defined!')
+            logger.warning('Host not defined!')
             exit()
         get_vms(args)
 

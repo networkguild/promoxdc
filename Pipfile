@@ -8,6 +8,7 @@ paramiko = "*"
 proxmoxer = "*"
 openssh-wrapper = "*"
 requests = "*"
+pyfiglet = "*"
 
 [dev-packages]
 pytest = "*"

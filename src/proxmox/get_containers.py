@@ -1,4 +1,3 @@
-import logging
 import os
 
 from utils import proxmox_connection

@@ -1,6 +1,6 @@
-# promoxdc
+# proxmoxdc
 ### Requirements
-* Python 3.9
+* Python 3.10
 * Pip
 
 ### Install pipenv, needed packages and create virtual env
@@ -8,7 +8,7 @@
 * pipenv install
 
 ### Install packages only in dev environment
-* pipenv install pytest --dev
+* pipenv install --dev
 
 ### Lauch virtual env
 * pipenv shell

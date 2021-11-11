@@ -1,0 +1,2 @@
+{'arch': 'amd64', 'unprivileged': 1, 'ostype': 'alpine', 'rootfs': 'local-lvm:vm-100-disk-0,size=3G', 'memory': 256, 'swap': 256, 'hostname': 'dhcp', 'features': 'nesting=1', 'cores': 1, 'digest': 'c580b05d169639654924cc823d5d3c5be07db08e', 'net0': 'name=eth0,bridge=vmbr0,firewall=1,hwaddr=BA:31:95:D7:D7:5E,type=veth'}
+

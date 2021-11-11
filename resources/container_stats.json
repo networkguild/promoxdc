@@ -1,0 +1,1 @@
+{'netin': 270786, 'type': 'lxc', 'status': 'running', 'disk': 9211904, 'diskwrite': 0, 'diskread': 10493952, 'cpu': 0, 'netout': 1942, 'vmid': '100', 'name': 'dhcp', 'swap': 0, 'mem': 1851392, 'maxswap': 268435456, 'cpus': 1, 'pid': 216828, 'uptime': 6366, 'maxmem': 268435456, 'maxdisk': 3094126592}

@@ -1,4 +1,5 @@
 import os
+import asyncio
 from utils import proxmox_connection
 from log import setup_logger
 
@@ -14,9 +15,10 @@ async def get_containers(host: str):
     containers = []
     for node in proxmox.nodes.get():
         for lxc in proxmox.nodes(node["node"]).lxc.get():
-            containers.append(lxc)
-            # config = proxmox.nodes(node['node']).lxc(lxc["vmid"]).config.get()
-            # logger.info(config)
+            config = proxmox.nodes(node["node"]).lxc(lxc["vmid"]).config.get()
+            logger.info(config)
+            logger.info(lxc)
+            containers.append(config)
 
     return containers
 
@@ -27,11 +29,14 @@ def get(arguments):
         for ip in hosts:
             logger.info(f"Getting virtual machines from node {ip}")
 
-            vms = get_containers(arguments.host).__await__()
+            vms = asyncio.run(get_containers(ip))
             for vm in vms:
-                logger.info(
-                    f"""
-Container name: {vm['name']}, vmid: {vm['vmid']}, status: {vm['status']}
-Os: {vm['ostype']}, mac: {vm['hwaddr']}, swap: {vm['swap']}M, memory: {vm['memory']}M
-        """
-                )
+                pass
+
+
+#                logger.info(
+#                    f"""
+# Container name: {vm['hostname']}, vmid: {vm['vmid']}, status: {vm['status']}
+# Os: {vm['ostype']}, mac: {vm['hwaddr']}, swap: {vm['swap']}M, memory: {vm['memory']}M
+#        """
+#                 )

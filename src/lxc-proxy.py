@@ -1,5 +1,6 @@
 import os
 import argparse
+import asyncio
 from proxmox import containers
 from log import setup_logger
 import pyfiglet
@@ -27,21 +28,30 @@ if __name__ == "__main__":
         default=False,
     )
     action.add_argument(
-        "-g", "--get", action="store_true", help="Get container by vdi", default=False
+        "-g", "--get", action="store_true", help="Get containers", default=False
+    )
+
+    action.add_argument(
+        "-gs", "--get_stats", action="store_true", help="Get container stats", default=False
     )
 
     edit_args = parser.add_argument_group()
-    edit_args.add_argument("-f", "--file", help="Config xml", required=False)
     edit_args.add_argument("-i", "--inventory", help="Inventory file", required=False)
 
     get_args = parser.add_argument_group()
-    get_args.add_argument("--host", help="Host ip:[port]")
     get_args.add_argument("--user", default="admin", help="Proxmox node username")
 
     args = parser.parse_args()
 
     if args.get:
-        if args.host or not args.inventory:
-            logger.warning("Host not defined!")
+        if not args.inventory:
+            logger.warning("Host or inventory not defined!")
             exit()
-        containers.get(args)
+        asyncio.run(containers.get(args))
+
+    if args.get_stats:
+        print(args)
+        if not args.inventory:
+            logger.warning("Host or inventory not defined!")
+            exit()
+        asyncio.run(containers.get_stats(args))

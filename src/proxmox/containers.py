@@ -1,5 +1,4 @@
 import os
-import asyncio
 from utils import proxmox_connection
 from log import setup_logger
 
@@ -10,33 +9,44 @@ USERNAME = os.environ.get("USERNAME", "admin")
 PROCESS_COUNT = int(os.environ.get("PROCESS_COUNT", "5"))
 
 
-async def get_containers(host: str):
+async def get_containers(host: str, stats: bool):
     proxmox = proxmox_connection(host=host, user=USERNAME, password=PASSWORD)
     containers = []
     for node in proxmox.nodes.get():
         for lxc in proxmox.nodes(node["node"]).lxc.get():
-            config = proxmox.nodes(node["node"]).lxc(lxc["vmid"]).config.get()
-            logger.info(config)
-            logger.info(lxc)
-            containers.append(config)
+            if stats:
+                containers.append(lxc)
+            else:
+                config = proxmox.nodes(node["node"]).lxc(lxc["vmid"]).config.get()
+                containers.append(config)
 
     return containers
 
 
-def get(arguments):
+async def get(arguments):
     with open(arguments.inventory) as f:
         hosts = f.read().splitlines()
         for ip in hosts:
-            logger.info(f"Getting virtual machines from node {ip}")
+            logger.info(f"Getting containers from node {ip}")
 
-            vms = asyncio.run(get_containers(ip))
+            vms = await get_containers(ip, False)
             for vm in vms:
-                pass
+                logger.info(
+                    f"""
+Container name: {vm['hostname']}, arch: {vm['arch']}, ip: {vm['net0']}
+Os: {vm['ostype']}, swap: {vm['swap']}M, memory: {vm['memory']}M
+       """
+                )
 
 
-#                logger.info(
-#                    f"""
-# Container name: {vm['hostname']}, vmid: {vm['vmid']}, status: {vm['status']}
-# Os: {vm['ostype']}, mac: {vm['hwaddr']}, swap: {vm['swap']}M, memory: {vm['memory']}M
-#        """
-#                 )
+async def get_stats(arguments):
+    with open(arguments.inventory) as f:
+        hosts = f.read().splitlines()
+        for ip in hosts:
+            logger.info(f"Getting container stats from node {ip}")
+
+            vms = await get_containers(ip, True)
+            for vm in vms:
+                logger.info(
+                    f"Container name: {vm['name']}, id: {vm['vmid']}, status: {vm['status']}, uptime: {vm['uptime'] / 60}"
+                )

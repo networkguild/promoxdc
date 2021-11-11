@@ -1,7 +1,7 @@
 import os
 
-from src.utils import proxmox_connection
-from src.log import setup_logger
+from utils import proxmox_connection
+from log import setup_logger
 
 logger = setup_logger(__name__)
 

@@ -1,7 +1,9 @@
 import os
 
-from utils import proxmox_connection
-from lxc-proxy import logger
+from src.utils import proxmox_connection
+from src.log import setup_logger
+
+logger = setup_logger(__name__)
 
 PASSWORD = os.environ.get('PASSWORD', 'admin')
 

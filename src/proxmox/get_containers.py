@@ -1,6 +1,7 @@
 import os
 
 from utils import proxmox_connection
+from lxc-proxy import logger
 
 PASSWORD = os.environ.get('PASSWORD', 'admin')
 
@@ -9,7 +10,9 @@ def get_containers(host: str, username: str):
     proxmox = proxmox_connection(host=host, user=username, password=PASSWORD)
     vms = []
     for node in proxmox.nodes.get():
-        for vm in proxmox.get('nodes/%s/openvz' % node['node']):
-            vms.append(vm)
+        for lxc in proxmox.nodes(node['node']).lxc.get():
+            config = proxmox.nodes(node['node']).lxc(lxc["vmid"]).config.get()
+            vms.append(lxc)
+            logger.info(config)
 
     return vms

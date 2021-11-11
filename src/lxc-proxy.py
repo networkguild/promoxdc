@@ -8,11 +8,11 @@ VERSION = os.environ.get('VERSION_NUMBER', '1.0-SNAPSHOT')
 
 figlet = pyfiglet.figlet_format('LXC Proxy', font='slant')
 banner = f'{figlet}Version: {VERSION}\n'
+print(banner)
 
 PROCESS_COUNT = int(os.environ.get('PROCESS_COUNT', '5'))
 _HERE = os.path.dirname(__file__)
 logger = setup_logger(__name__)
-print(banner)
 
 
 def get_vms(argument):

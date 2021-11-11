@@ -10,3 +10,7 @@ venv:
 .PHONY: docker
 docker:
 	docker build -f Dockerfile . -t $(IMAGE):$(TAG) --build-arg VERSION=$(VERSION_NUMBER)
+
+.PHONY: publish
+publish: docker
+	docker push $(IMAGE):$(TAG)

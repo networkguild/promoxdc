@@ -1,4 +1,5 @@
 import os
+import datetime
 from utils import proxmox_connection
 from log import setup_logger
 
@@ -7,6 +8,18 @@ logger = setup_logger(__name__)
 PASSWORD = os.environ.get("PASSWORD", "admin")
 USERNAME = os.environ.get("USERNAME", "admin")
 PROCESS_COUNT = int(os.environ.get("PROCESS_COUNT", "5"))
+
+newcontainer = {
+    "vmid": "",
+    "ostemplate": "local:vztmpl/alpine-ssh.tar.gz",
+    "hostname": "",
+    "storage": "local",
+    "memory": 512,
+    "swap": 512,
+    "cores": 1,
+    "password": "lab123",
+    "net0": "name=eth0,bridge=vmbr0,ip=192.168.163.102/24,gw=192.168.163.1",
+}
 
 
 async def get_containers(host: str, stats: bool):
@@ -32,10 +45,10 @@ async def get(arguments):
             vms = await get_containers(ip, False)
             for vm in vms:
                 logger.info(
-                    f"""
-Container name: {vm['hostname']}, arch: {vm['arch']}, ip: {vm['net0']}
-Os: {vm['ostype']}, swap: {vm['swap']}M, memory: {vm['memory']}M
-       """
+                    f"Container name: {vm['hostname']}, arch: {vm['arch']}\n"
+                    + f"Net: {vm['net0']}\n"
+                    + f"Digest: {vm['digest']}\n"
+                    + f"Os: {vm['ostype']}, swap: {vm['swap']}M, memory: {vm['memory']}M"
                 )
 
 
@@ -48,5 +61,10 @@ async def get_stats(arguments):
             vms = await get_containers(ip, True)
             for vm in vms:
                 logger.info(
-                    f"Container name: {vm['name']}, id: {vm['vmid']}, status: {vm['status']}, uptime: {vm['uptime'] / 60}"
+                    f"Container name: {vm['name']}, id: {vm['vmid']}, "
+                    f"status: {vm['status']}, uptime: {str(datetime.timedelta(seconds = vm['uptime']))}"
                 )
+
+
+async def create(arguments):
+    pass

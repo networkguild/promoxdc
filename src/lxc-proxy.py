@@ -32,7 +32,11 @@ if __name__ == "__main__":
     )
 
     action.add_argument(
-        "-gs", "--get_stats", action="store_true", help="Get container stats", default=False
+        "-gs",
+        "--get_stats",
+        action="store_true",
+        help="Get container stats",
+        default=False,
     )
 
     edit_args = parser.add_argument_group()
@@ -50,7 +54,6 @@ if __name__ == "__main__":
         asyncio.run(containers.get(args))
 
     if args.get_stats:
-        print(args)
         if not args.inventory:
             logger.warning("Host or inventory not defined!")
             exit()

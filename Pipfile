@@ -16,3 +16,7 @@ black = "*"
 
 [requires]
 python_version = "3.10"
+
+[scripts]
+get = "python src/lxc-proxy.py -g -i hosts.ini"
+get_stats = "python src/lxc-proxy.py -gs -i hosts.ini"
